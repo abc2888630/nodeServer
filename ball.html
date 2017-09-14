@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>12-Canvas实现绚丽额额小球</title>
+    <style>
+      *{
+         margin: 0;
+         padding: 0;
+         list-style: none;
+         border: none;
+      }
+    </style>
+    <script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
+</head>
+<body>
+<canvas id='canvas' style='border: 1px solid #000;'></canvas>
+
+<script>
+  //1.构造函数
+  function Ball(obj) {
+    this._init(obj);
+  }
+
+  //2.设置原型对象
+  Ball.prototype = {
+    constructor:Ball,
+    _init:function (obj) {
+      obj = obj || {};
+
+      //定义属性
+      //圆心
+      this.x = obj.x || 0;
+      this.y = obj.y || 0;
+
+      //半径
+      this.r = obj.r || 0;
+
+      //颜色
+      this.color = obj.color || 'black';
+
+      //速度
+      this.speed = obj.speed || 1;
+
+      //x方向变化的量,y方向变化的量
+      this.dx = Math.random() * 20 - 10;
+      this.dy = Math.random() * 20 - 10;
+
+      //r的变化量
+      this.dr = Math.random() * 2 + 1; //保证至少变化1
+
+    },
+
+    //绘制
+    render:function (ctx) {
+
+      //保存状态
+      ctx.save();
+      //开启路径
+      ctx.beginPath();
+
+      ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+
+
+
+      //还原状态
+      ctx.restore();
+    },
+
+    //在水平方向移动
+    update:function () {
+      this.x += this.dx;
+      this.y += this.dy;
+      this.r -= this.dr;
+
+      //从数组中删除小球
+      if(this.r <= 0){
+        //without删除数组中的指定元素
+        //传入两个参数:
+        //第一个参数:要操作的数组
+        //第二个参数:要删除的元素
+        ballArr = _.without(ballArr,this)
+      }
+
+    },
+
+  };
+</script>
+
+<script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var ctx = canvas.getContext('2d');
+
+    //定义一个小球数组
+    var ballArr = [];
+
+    //定义一个颜色数组
+    var colorArr = ['red','green','blue','pink','skyblue','yellow','purple'];
+
+    setInterval(function () {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(var i=0;i<ballArr.length;i++){
+            ballArr[i].render(ctx);
+            ballArr[i].update();
+
+        }
+    },50);
+
+    //监听鼠标的移动
+    canvas.onmousemove = function (e) {
+        ballArr.push(new Ball({
+            x:e.offsetX,
+            y:e.offsetY,
+            r:30,
+            color:colorArr[_.random(0,colorArr.length-1)],
+        }));
+    }
+</script>
+</body>
+</html>
