@@ -2,7 +2,7 @@ var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var url = require("url");
-var mime = require('./mime.js').type;
+var mime = require('./mime.js').types;
 var port = 8800;
 http.createServer(function(request,resopnse){
 	var contentType;
