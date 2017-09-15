@@ -21,7 +21,7 @@ http.createServer(function(request,resopnse){
 	fs.readFile(pathname.substr(1),function(err, data){
 		if(err){
 			console.log(err);
-			resopnse.writeHead(400,{'Content-Type':contentType,'charset':'UTF8'});
+			resopnse.writeHead(404,{'Content-Type':contentType,'charset':'UTF8'});
 			resopnse.write('网页出现问题或者路径不存在');
 		}else{
 			resopnse.writeHead(200,{'Content-Type':contentType,'charset':'UTF8'});
